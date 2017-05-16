@@ -7,42 +7,52 @@ const f = math.fraction
 
 // region input
 const input = [
-	[3,0,0,0,-1,-2,-3],
-	[8,1,0,0,2,-1,2],
-	[12,0,1,0,-1,3,3],
-	[4,0,0,1,1,1,-5]
-].map(row =>
-	row.map(item => (typeof item === 'object' ? item : math.fraction(item, 1)))
-)
+	[3, 0, 0, 0, -1, -2, -3],
+	[8, 1, 0, 0, 2, -1, 2],
+	[12, 0, 1, 0, -1, 3, 3],
+	[4, 0, 0, 1, 1, 1, -5]
+]
 // endregion
 
 // region helper
 const matrixClone = tableau => tableau.map(vectorClone)
 const vectorClone = vector => vector.map(item => item)
 const print = ({ indices, tableau, pivot }) => {
-	const xIndices = [[''].concat(mapIndices(Array(tableau[0].length).fill(0).map((_, i) => i), tableau.length))]
+	const xIndices = [
+		[''].concat(
+			mapIndices(
+				Array(tableau[0].length).fill(0).map((_, i) => i),
+				tableau.length
+			)
+		)
+	]
 	const result = tableau.map((row, y) =>
-		mapIndices([indices[y]], tableau.length).concat(row.map((item, x) => {
-			let style = chalk.white
-			if (x === pivot.column || y === pivot.row) style = chalk.black.bgGreen
-			if (x === pivot.column && y === pivot.row) style = chalk.black.bgYellow
-			if (typeof item === 'number') return style(item)
-			if (Math.floor(+item) === +item) return style(+item)
-			return style(math.format(item, { notation: 'ratio' }))
-		}))
+		mapIndices([indices[y]], tableau.length).concat(
+			row.map((item, x) => {
+				let style = chalk.white
+				if (x === pivot.column || y === pivot.row) style = chalk.black.bgGreen
+				if (x === pivot.column && y === pivot.row) style = chalk.black.bgYellow
+				if (typeof item === 'number') return style(item)
+				if (Math.floor(+item) === +item) return style(+item)
+				return style(math.format(item, { notation: 'ratio' }))
+			})
+		)
 	)
 	console.log(table(xIndices.concat(result)))
 }
-const mapIndices = (indices, height) => indices.map(index => {
-	if (index >= height) return `x${index-height+1}`
-	if (index === 0) return ''
-	return `u${index}`
-})
+const mapIndices = (indices, height) =>
+	indices.map(index => {
+		if (index >= height) return `x${index - height + 1}`
+		if (index === 0) return ''
+		return `u${index}`
+	})
 // endregion
 
 // region transform
 const simplex = {
-	tableau: input,
+	tableau: input.map(row =>
+		row.map(item => (typeof item === 'object' ? item : math.fraction(item, 1)))
+	),
 	indices: Array(input.length).fill(0).map((_, index) => index),
 	pivot: {
 		column: -1,
@@ -103,7 +113,7 @@ const iterate = ({ tableau, indices }) => {
 			if (withMin.length === 1) return withMin[0]
 		}
 	})()
-	
+
 	// no solution?
 	if (pivot.row === undefined) {
 		console.log('#################')
