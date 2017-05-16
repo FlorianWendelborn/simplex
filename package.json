@@ -1,0 +1,12 @@
+{
+  "name": "simplex",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "dodekeract <florianwendgithub@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "mathjs": "^3.13.1",
+    "table": "^4.0.1"
+  }
+}
